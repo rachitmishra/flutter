@@ -1,3 +1,4 @@
+import 'package:booker_t/book_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +35,7 @@ class BookModel with ChangeNotifier {
 }
 
 class BookList extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: Text("Booker-T")),
@@ -58,6 +60,8 @@ class BookList extends StatelessWidget {
       );
 }
 
+
+
 Widget _buildBookList() {
   return Consumer<BookModel>(builder: (context, model, child) {
     if (model.itemCount == 0) {
@@ -73,19 +77,27 @@ Widget _buildBookList() {
         shrinkWrap: true,
         itemCount: model.itemCount,
         itemBuilder: (context, index) {
-          return BookItem(model.itemAtIndex(index));
+          return GestureDetector(
+              child: BookItem(model.itemAtIndex(index)),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BookDetail()),
+              );
+            },
+          );
         },
         separatorBuilder: (context, index) {
           return Divider();
         },
       );
     }
-    ;
   });
 }
 
 class BookItem extends StatelessWidget {
   final String _title;
+  final String _imageUrl = "https://github.com/flutter/plugins/raw/master/packages/video_player/doc/demo_ipod.gif?raw=true";
 
   BookItem(this._title);
 
@@ -94,7 +106,12 @@ class BookItem extends StatelessWidget {
     return Container(
         child: Padding(
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Text(_title),
+      child: Row(
+        children: [
+          Image.network(_imageUrl, width: 80, height: 80),
+          Text(_title)
+        ],
+      ),
     ));
   }
 }
